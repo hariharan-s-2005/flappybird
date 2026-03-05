@@ -1,3 +1,6 @@
+Flappy bird ultimate · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,6 +24,17 @@
   }
 
   /* ===== CANVAS WRAPPER ===== */
+  #gameWrapper {
+    position: relative;
+    width: 400px;
+    height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 2px rgba(255,255,255,0.08),
+      0 30px 80px rgba(0,0,0,0.7),
+      0 0 120px rgba(100,180,255,0.1);
+  }
 
   canvas {
     display: block;
@@ -155,31 +169,18 @@
   }
 
   /* ===== RESPONSIVE ===== */
-  #gameWrapper {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
-    overflow: hidden;
-    box-shadow: none;
-  }
-
-  canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
-
-  @media (min-width: 500px) and (min-height: 650px) {
+  @media (max-width: 420px) {
     #gameWrapper {
-      width: min(400px, 90vw);
-      height: min(600px, 95vh);
-      border-radius: 16px;
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,0.08),
-        0 30px 80px rgba(0,0,0,0.7),
-        0 0 120px rgba(100,180,255,0.1);
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+    }
+  }
+  @media (max-height: 620px) {
+    #gameWrapper {
+      width: calc(100vh * 0.6667);
+      height: 100vh;
+      border-radius: 0;
     }
   }
 </style>
@@ -217,22 +218,8 @@
   // ===== CANVAS SETUP =====
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
-
-  // Resize canvas to fill wrapper at full device resolution
-  function resizeCanvas() {
-    const wrapper = canvas.parentElement;
-    canvas.width  = wrapper.clientWidth;
-    canvas.height = wrapper.clientHeight;
-  }
-  resizeCanvas();
-  window.addEventListener('resize', () => { resizeCanvas(); });
-
-  // Use getters so W/H always reflect current size
-  const getW = () => canvas.width;
-  const getH = () => canvas.height;
-  // Shorthand aliases updated per frame
-  let W = canvas.width;
-  let H = canvas.height;
+  const W = canvas.width;   // 400
+  const H = canvas.height;  // 600
 
   // ===== DOM REFERENCES =====
   const overlay      = document.getElementById('gameOverlay');
@@ -249,8 +236,8 @@
   let bestScore = parseInt(localStorage.getItem('flappy_best') || '0', 10);
 
   // ===== PHYSICS CONSTANTS =====
-  const GRAVITY       = 0.16;
-  const JUMP_FORCE    = -5.2;
+  const GRAVITY       = 0.20;
+  const JUMP_FORCE    = -5.8;
   const PIPE_SPEED    = 1.8;
   const PIPE_GAP      = 205;
   const PIPE_INTERVAL = 90;   // frames between pipes
@@ -887,8 +874,6 @@
 
   // ===== GAME LOOP =====
   function loop() {
-    W = canvas.width;
-    H = canvas.height;
     update();
     render();
     requestAnimationFrame(loop);
