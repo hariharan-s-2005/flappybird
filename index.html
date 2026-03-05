@@ -251,12 +251,12 @@
   let bestScore = parseInt(localStorage.getItem('flappy_best') || '0', 10);
 
   // ===== PHYSICS CONSTANTS =====
-  // Scale factor based on screen width relative to base 400px design
-  const scale = () => Math.min(W / 400, 1.2);
+  // Scale factor — always relative to 400px base, no cap so mobile gets full speed
+  const scale = () => W / 400;
 
   const GRAVITY       = 0.10;
   const JUMP_FORCE    = -4.0;
-  const BASE_PIPE_SPEED  = 1.8;
+  const BASE_PIPE_SPEED  = 2.8;
   const PIPE_GAP      = 205;
   const PIPE_INTERVAL = 90;   // frames between pipes
   const PIPE_WIDTH    = 64;
@@ -427,7 +427,7 @@
     if (state === STATE.DEAD) return;
     if (state === STATE.START) { startGame(); return; }
     if (!bird.alive) return;
-    bird.vy = JUMP_FORCE * Math.min(H / 600, 1.2);
+    bird.vy = JUMP_FORCE * (H / 600);
     soundJump();
     spawnParticles(bird.x - 10, bird.y);
   }
@@ -489,8 +489,8 @@
     // === PLAYING STATE ===
 
     // Bird physics — scale gravity by screen height ratio
-    bird.vy += GRAVITY * Math.min(H / 600, 1.2);
-    bird.y  += bird.vy * Math.min(H / 600, 1.2);
+    bird.vy += GRAVITY * (H / 600);
+    bird.y  += bird.vy * (H / 600);
     bird.angle = Math.max(-30, Math.min(90, bird.vy * 5)); // rotation
 
     if (bird.flashTimer > 0) bird.flashTimer--;
